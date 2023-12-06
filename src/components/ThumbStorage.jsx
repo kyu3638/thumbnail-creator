@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import storage from '../utils/storage/storage';
 import styled from 'styled-components';
 
 function ThumbStorage() {
-  const storedThumbnails = storage.get('thumbnail');
+  const [storedThumbnails, setStoredThumbnails] = useState(
+    storage.get('thumbnail')
+  );
+  // const storedThumbnails = storage.get('thumbnail');
 
   const thumbnailsPreivew = storedThumbnails.map((obj, id) => {
     const scale = 360 / obj.width;
@@ -12,33 +15,44 @@ function ThumbStorage() {
     const scaledTitleSize = obj.titleSize * scale;
     const scaledSubtitleSize = obj.subtitleSize * scale;
     return (
-      <ScaledCanvas
-        key={id}
-        $width={scaledWidth}
-        $height={scaledHeight}
-        $background={obj.background}
-      >
-        <ScaledThumbTitle
-          $titleSize={scaledTitleSize}
-          $isBold={obj.isBold}
-          $isShadow={obj.isShadow}
-          $isBlack={obj.isBlack}
+      <div key={id}>
+        <ScaledCanvas
+          key={id}
+          $width={scaledWidth}
+          $height={scaledHeight}
+          $background={obj.background}
         >
-          {obj.title}
-        </ScaledThumbTitle>
-        <hr className="line"></hr>
-        <ScaledThumbSubtitle
-          $subtitleSize={scaledSubtitleSize}
-          $isBold={obj.isBold}
-          $isShadow={obj.isShadow}
-          $isBlack={obj.isBlack}
-        >
-          {obj.subtitle}
-        </ScaledThumbSubtitle>
-      </ScaledCanvas>
+          <ScaledThumbTitle
+            $titleSize={scaledTitleSize}
+            $isBold={obj.isBold}
+            $isShadow={obj.isShadow}
+            $isBlack={obj.isBlack}
+          >
+            {obj.title}
+          </ScaledThumbTitle>
+          <hr className="line"></hr>
+          <ScaledThumbSubtitle
+            $subtitleSize={scaledSubtitleSize}
+            $isBold={obj.isBold}
+            $isShadow={obj.isShadow}
+            $isBlack={obj.isBlack}
+          >
+            {obj.subtitle}
+          </ScaledThumbSubtitle>
+        </ScaledCanvas>
+        <div>
+          <button>수정</button>
+          <button onClick={() => deleteThumbnail(id)}>삭제</button>
+        </div>
+      </div>
     );
   });
 
+  function deleteThumbnail(id) {
+    storedThumbnails.splice(id, 1);
+    storage.set('thumbnail', storedThumbnails);
+    setStoredThumbnails(storage.get('thumbnail'));
+  }
   return (
     <div className="thumb-storage">
       <header>미리보기</header>
