@@ -5,7 +5,7 @@ import styled from 'styled-components';
 function ThumbStorage() {
   const storedThumbnails = storage.get('thumbnail');
 
-  const thumbnailsPreivew = storedThumbnails.map((obj) => {
+  const thumbnailsPreivew = storedThumbnails.map((obj, id) => {
     const scale = 360 / obj.width;
     const scaledWidth = obj.width * scale;
     const scaledHeight = obj.height * scale;
@@ -13,24 +13,25 @@ function ThumbStorage() {
     const scaledSubtitleSize = obj.subtitleSize * scale;
     return (
       <ScaledCanvas
-        width={scaledWidth}
-        height={scaledHeight}
-        background={obj.background}
+        key={id}
+        $width={scaledWidth}
+        $height={scaledHeight}
+        $background={obj.background}
       >
         <ScaledThumbTitle
-          titleSize={scaledTitleSize}
-          isBold={obj.isBold}
-          isShadow={obj.isShadow}
-          isBlack={obj.isBlack}
+          $titleSize={scaledTitleSize}
+          $isBold={obj.isBold}
+          $isShadow={obj.isShadow}
+          $isBlack={obj.isBlack}
         >
           {obj.title}
         </ScaledThumbTitle>
         <hr className="line"></hr>
         <ScaledThumbSubtitle
-          subtitleSize={scaledSubtitleSize}
-          isBold={obj.isBold}
-          isShadow={obj.isShadow}
-          isBlack={obj.isBlack}
+          $subtitleSize={scaledSubtitleSize}
+          $isBold={obj.isBold}
+          $isShadow={obj.isShadow}
+          $isBlack={obj.isBlack}
         >
           {obj.subtitle}
         </ScaledThumbSubtitle>
@@ -49,29 +50,29 @@ function ThumbStorage() {
 export default ThumbStorage;
 
 const ScaledCanvas = styled.div`
-  width: ${(props) => props.width}px;
-  height: ${(props) => props.height}px;
+  width: ${(props) => props.$width}px;
+  height: ${(props) => props.$height}px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: ${(props) => props.background};
+  background: ${(props) => props.$background};
   background-position: center;
   background-size: cover;
 `;
 
 const ScaledThumbTitle = styled.h2`
-  font-size: ${(props) => props.titleSize}px;
-  font-weight: ${(props) => (props.isBold ? 'bold' : 'normal')};
+  font-size: ${(props) => props.$titleSize}px;
+  font-weight: ${(props) => (props.$isBold ? 'bold' : 'normal')};
   text-shadow: ${(props) =>
-    props.isShadow ? '2px 2px 3px rgba(0,0,0,0.5)' : 'unset'};
-  color: ${(props) => (props.isBlack ? 'black' : 'white')};
+    props.$isShadow ? '2px 2px 3px rgba(0,0,0,0.5)' : 'unset'};
+  color: ${(props) => (props.$isBlack ? 'black' : 'white')};
 `;
 
 const ScaledThumbSubtitle = styled.h3`
-  font-size: ${(props) => props.subtitleSize}px;
-  font-weight: ${(props) => (props.isBold ? 'bold' : 'normal')};
+  font-size: ${(props) => props.$subtitleSize}px;
+  font-weight: ${(props) => (props.$isBold ? 'bold' : 'normal')};
   text-shadow: ${(props) =>
-    props.isShadow ? '2px 2px 3px rgba(0,0,0,0.5)' : 'unset'};
-  color: ${(props) => (props.isBlack ? 'black' : 'white')};
+    props.$isShadow ? '2px 2px 3px rgba(0,0,0,0.5)' : 'unset'};
+  color: ${(props) => (props.$isBlack ? 'black' : 'white')};
 `;

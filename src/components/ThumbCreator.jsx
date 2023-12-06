@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 /** localStorage 이용을 위한 유틸리티 함수 */
 import storage from '../utils/storage/storage';
+import html2canvas from 'html2canvas';
 
 function ThumbCreator() {
   // thumbnail state
@@ -85,36 +86,51 @@ function ThumbCreator() {
     storage.set('thumbnail', [thumbnailInfo, ...storedThumbnails]);
   }
 
+  function downloadThumbnail() {
+    const target = document.getElementById('thumbnail');
+    if (!target) return;
+    console.log(target);
+    html2canvas(target).then((canvas) => {
+      const link = document.createElement('a');
+      document.body.appendChild(link);
+      link.href = canvas.toDataURL('image/png');
+      link.download = 'thumbnail.png';
+      link.click();
+      document.body.removeChild(link);
+    });
+  }
+
   return (
     <div className="thumb-creator">
       <div className="preview">
         <Canvas
+          id="thumbnail"
           className="thumb"
-          width={width}
-          height={height}
-          background={background}
+          $width={width}
+          $height={height}
+          $background={background}
         >
           <ThumbTitle
-            titleSize={titleSize}
-            isBold={isBold}
-            isShadow={isShadow}
-            isBlack={isBlack}
+            $titleSize={titleSize}
+            $isBold={isBold}
+            $isShadow={isShadow}
+            $isBlack={isBlack}
           >
             {title}
           </ThumbTitle>
           <hr className="line"></hr>
           <ThumbSubtitle
-            subtitleSize={subtitleSize}
-            isBold={isBold}
-            isShadow={isShadow}
-            isBlack={isBlack}
+            $subtitleSize={subtitleSize}
+            $isBold={isBold}
+            $isShadow={isShadow}
+            $isBlack={isBlack}
           >
             {subtitle}
           </ThumbSubtitle>
         </Canvas>
       </div>
       <div className="options">
-        <Option num={2}>
+        <Option $num={2}>
           <h2>사이즈</h2>
           <input
             type="number"
@@ -127,13 +143,13 @@ function ThumbCreator() {
             onChange={(e) => setHeight(e.target.value)}
           />
         </Option>
-        <Option num={3}>
+        <Option $num={3}>
           <h2>배경</h2>
           <button onClick={setBackgroundImage}>단색</button>
           <button onClick={setBackgroundImage}>그라디언트</button>
           <button onClick={setBackgroundImage}>이미지링크</button>
         </Option>
-        <Option num={2}>
+        <Option $num={2}>
           <h2>텍스트</h2>
           <input
             type="text"
@@ -146,7 +162,7 @@ function ThumbCreator() {
             onChange={(e) => setSubtitle(e.target.value)}
           />
         </Option>
-        <Option num={4}>
+        <Option $num={4}>
           <h2>텍스트 크기</h2>
           <button onClick={() => setTitleSize((pre) => pre + 1)}>
             제목 크게
@@ -161,7 +177,7 @@ function ThumbCreator() {
             소제목 작게
           </button>
         </Option>
-        <Option num={3}>
+        <Option $num={3}>
           <h2>텍스트 스타일</h2>
           <button onClick={textBoldHandler}>텍스트 굵게</button>
           <button onClick={textShadowHandler}>텍스트 그림자</button>
@@ -170,7 +186,7 @@ function ThumbCreator() {
       </div>
       <SaveOptions>
         <button onClick={saveTemp}>임시저장</button>
-        <button>다운로드</button>
+        <button onClick={downloadThumbnail}>다운로드</button>
         <button>클립보드 복사</button>
       </SaveOptions>
     </div>
@@ -180,13 +196,13 @@ function ThumbCreator() {
 export default ThumbCreator;
 
 const Canvas = styled.div`
-  width: ${(props) => props.width}px;
-  height: ${(props) => props.height}px;
+  width: ${(props) => props.$width}px;
+  height: ${(props) => props.$height}px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: ${(props) => props.background};
+  background: ${(props) => props.$background};
   background-position: center;
   background-size: cover;
 `;
@@ -196,23 +212,23 @@ const Option = styled.div`
   heigth: 15%;
   display: grid;
   grid-template-rows: 1;
-  grid-template-columns: 25% repeat(${(props) => +props.num}, 1fr);
+  grid-template-columns: 25% repeat(${(props) => +props.$num}, 1fr);
 `;
 
 const ThumbTitle = styled.h2`
-  font-size: ${(props) => props.titleSize}px;
-  font-weight: ${(props) => (props.isBold ? 'bold' : 'normal')};
+  font-size: ${(props) => props.$titleSize}px;
+  font-weight: ${(props) => (props.$isBold ? 'bold' : 'normal')};
   text-shadow: ${(props) =>
-    props.isShadow ? '2px 2px 3px rgba(0,0,0,0.5)' : 'unset'};
-  color: ${(props) => (props.isBlack ? 'black' : 'white')};
+    props.$isShadow ? '2px 2px 3px rgba(0,0,0,0.5)' : 'unset'};
+  color: ${(props) => (props.$isBlack ? 'black' : 'white')};
 `;
 
 const ThumbSubtitle = styled.h3`
-  font-size: ${(props) => props.subtitleSize}px;
-  font-weight: ${(props) => (props.isBold ? 'bold' : 'normal')};
+  font-size: ${(props) => props.$subtitleSize}px;
+  font-weight: ${(props) => (props.$isBold ? 'bold' : 'normal')};
   text-shadow: ${(props) =>
-    props.isShadow ? '2px 2px 3px rgba(0,0,0,0.5)' : 'unset'};
-  color: ${(props) => (props.isBlack ? 'black' : 'white')};
+    props.$isShadow ? '2px 2px 3px rgba(0,0,0,0.5)' : 'unset'};
+  color: ${(props) => (props.$isBlack ? 'black' : 'white')};
 `;
 
 const SaveOptions = styled.div`
