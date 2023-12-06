@@ -1,0 +1,54 @@
+@import url('./reset.css');
+
+.App {
+  display: flex;
+  justify-content: space-around;
+}
+
+/* thumb-creator */
+.thumb-creator {
+  width: 50vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.preview {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .thumb {
+    display: flex;
+    flex-direction: column;
+    .line {
+      width: 60%;
+      border: 1px solid white;
+    }
+  }
+}
+
+.options {
+  width: 100%;
+  height: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* thumb-storage */
+.thumb-storage {
+  border: 1px solid black;
+  width: 400px;
+  height: 100vh;
+}
+
+.thumbs-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
