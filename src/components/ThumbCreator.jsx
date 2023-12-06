@@ -69,7 +69,11 @@ function ThumbCreator() {
 
   /** 현재 제작 중인 썸네일을 local storage에 임시저장하는 함수 */
   function saveTemp() {
+    const storedThumbnails = storage.get('thumbnail') || [];
+    // 기존에 임시 저장된 썸네일이 있으면 마지막 번호 + 1, 아니면 0을 id로 설정
+    const newId = storedThumbnails.length ? storedThumbnails[0].id + 1 : 0;
     let thumbnailInfo = {
+      id: newId,
       width: width,
       height: height,
       background: background,
@@ -81,8 +85,7 @@ function ThumbCreator() {
       isShadow: isShadow,
       isBlack: isBlack,
     };
-    const storedThumbnails = storage.get('thumbnail');
-    console.log(storedThumbnails);
+    // 가장 최근에 저장한 파일이 위로 오도록 thumbnailInfo를 앞에 삽입한다.
     storage.set('thumbnail', [thumbnailInfo, ...storedThumbnails]);
   }
 
