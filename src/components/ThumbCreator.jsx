@@ -89,8 +89,11 @@ function ThumbCreator() {
   function downloadThumbnail() {
     const target = document.getElementById('thumbnail');
     if (!target) return;
-    console.log(target);
-    html2canvas(target).then((canvas) => {
+    html2canvas(target, {
+      letterRendering: 1,
+      allowTaint: true, // cross-origin 이미지를 캔버스에 삽입할지
+      useCORS: true, // Whether to attempt to load images from a server using CORS
+    }).then((canvas) => {
       const link = document.createElement('a');
       document.body.appendChild(link);
       link.href = canvas.toDataURL('image/png');
