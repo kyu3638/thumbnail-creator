@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-
-/** localStorage 이용을 위한 유틸리티 함수 */
-import storage from '../utils/storage/storage';
+// html2canvas
 import html2canvas from 'html2canvas';
+// redux
+import { connect } from 'react-redux';
+import { addThumbnail } from '../redux/stored-thumbnail/actions';
+import { changeBackground } from '../redux/app-background/actions';
 
-function ThumbCreator() {
+function ThumbCreator(props) {
   // thumbnail state
   const [width, setWidth] = useState(300);
   const [height, setHeight] = useState(200);
@@ -25,9 +27,9 @@ function ThumbCreator() {
   function setBackgroundImage(event) {
     /** 랜덤한 rgb 색상 생성하는 함수  */
     function makeRGB() {
-      const a = Math.floor(Math.random() * 90 + 1) + 150;
-      const b = Math.floor(Math.random() * 90 + 1) + 150;
-      const c = Math.floor(Math.random() * 90 + 1) + 150;
+      const a = Math.floor(Math.random() * (255 - 150 + 1)) + 150;
+      const b = Math.floor(Math.random() * (255 - 150 + 1)) + 150;
+      const c = Math.floor(Math.random() * (255 - 150 + 1)) + 150;
       const rgb = `rgb(${a},${b},${c})`;
       return rgb;
     }
@@ -37,16 +39,22 @@ function ThumbCreator() {
       const color2 = makeRGB();
       return `linear-gradient(${color1}, ${color2})`;
     }
+    let background;
     switch (event.target.innerText) {
       case '단색':
-        setBackground(makeRGB());
+        background = makeRGB();
+        setBackground(background);
+        props.changeBackground(background);
         break;
       case '그라디언트':
-        setBackground(makeGradient());
+        background = makeGradient();
+        setBackground(background);
+        props.changeBackground(background);
         break;
       case '이미지링크':
         const imageLink = prompt('이미지 링크를 입력해주세요');
         setBackground(`url(${imageLink})`);
+        props.changeBackground(`url(${imageLink})`);
         break;
     }
   }
@@ -67,11 +75,11 @@ function ThumbCreator() {
     else setIsBlack(true);
   }
 
-  /** 현재 제작 중인 썸네일을 local storage에 임시저장하는 함수 */
-  function saveTemp() {
-    const storedThumbnails = storage.get('thumbnail') || [];
-    // 기존에 임시 저장된 썸네일이 있으면 마지막 번호 + 1, 아니면 0을 id로 설정
-    const newId = storedThumbnails.length ? storedThumbnails[0].id + 1 : 0;
+  /** 현재 제작 중인 썸네일을 local storage에 임시저장하는 함수, redux에서 전역 상태관리하는 storedThumbnails에 새로운 썸네일 정보를 추가 후 local storage도 업데이트 한다. */
+  function addThumbHandler() {
+    const newId = props.storedThumbnails.length
+      ? props.storedThumbnails[0].id + 1
+      : 0;
     let thumbnailInfo = {
       id: newId,
       width: width,
@@ -85,10 +93,10 @@ function ThumbCreator() {
       isShadow: isShadow,
       isBlack: isBlack,
     };
-    // 가장 최근에 저장한 파일이 위로 오도록 thumbnailInfo를 앞에 삽입한다.
-    storage.set('thumbnail', [thumbnailInfo, ...storedThumbnails]);
+    props.addThumbnail(thumbnailInfo);
   }
 
+  /** 현재 생성하고 있는 썸네일을 다운로드 하는 함수 */
   function downloadThumbnail() {
     const target = document.getElementById('thumbnail');
     if (!target) return;
@@ -191,7 +199,7 @@ function ThumbCreator() {
         </Option>
       </div>
       <SaveOptions>
-        <button onClick={saveTemp}>임시저장</button>
+        <button onClick={(e) => addThumbHandler(e)}>임시저장</button>
         <button onClick={downloadThumbnail}>다운로드</button>
         <button>클립보드 복사</button>
       </SaveOptions>
@@ -199,7 +207,20 @@ function ThumbCreator() {
   );
 }
 
-export default ThumbCreator;
+const mapStateToProps = (state) => {
+  return {
+    storedThumbnails: state.storedThumbnails,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addThumbnail: (newThumbInfo) => dispatch(addThumbnail(newThumbInfo)),
+    changeBackground: (background) => dispatch(changeBackground(background)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ThumbCreator);
 
 const Canvas = styled.div`
   width: ${(props) => props.$width}px;
