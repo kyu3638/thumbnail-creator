@@ -5,6 +5,7 @@ import html2canvas from 'html2canvas';
 // redux
 import { connect } from 'react-redux';
 import { addThumbnail } from '../redux/stored-thumbnail/actions';
+import { changeBackground } from '../redux/app-background/actions';
 
 function ThumbCreator(props) {
   // thumbnail state
@@ -38,16 +39,22 @@ function ThumbCreator(props) {
       const color2 = makeRGB();
       return `linear-gradient(${color1}, ${color2})`;
     }
+    let background;
     switch (event.target.innerText) {
       case '단색':
-        setBackground(makeRGB());
+        background = makeRGB();
+        setBackground(background);
+        props.changeBackground(background);
         break;
       case '그라디언트':
-        setBackground(makeGradient());
+        background = makeGradient();
+        setBackground(background);
+        props.changeBackground(background);
         break;
       case '이미지링크':
         const imageLink = prompt('이미지 링크를 입력해주세요');
         setBackground(`url(${imageLink})`);
+        props.changeBackground(`url(${imageLink})`);
         break;
     }
   }
@@ -209,6 +216,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     addThumbnail: (newThumbInfo) => dispatch(addThumbnail(newThumbInfo)),
+    changeBackground: (background) => dispatch(changeBackground(background)),
   };
 };
 

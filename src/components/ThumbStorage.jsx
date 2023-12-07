@@ -42,7 +42,6 @@ function ThumbStorage(props) {
           </ScaledThumbSubtitle>
         </ScaledCanvas>
         <div className="preview-button">
-          <button>수정</button>
           <button onClick={() => props.removeOneThumbnail(obj.id)}>삭제</button>
           <button>다운로드</button>
         </div>

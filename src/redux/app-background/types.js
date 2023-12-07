@@ -1,0 +1,1 @@
+export const BACKGROUND_CHANGE = 'background_change'

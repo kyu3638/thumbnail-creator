@@ -1,5 +1,7 @@
 @import url('./reset.css');
 
+$background-color: rgba(255, 255, 255, 0.8);
+
 .App {
   display: flex;
   justify-content: space-around;
@@ -11,7 +13,7 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: $background-color;
 }
 
 .preview {
@@ -41,9 +43,9 @@
 
 /* thumb-storage */
 .thumb-storage {
-  border: 1px solid black;
   width: 400px;
   height: 100vh;
+  background-color: $background-color;
 }
 
 .thumbs-preview {
