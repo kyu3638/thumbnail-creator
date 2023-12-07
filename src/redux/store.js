@@ -1,6 +1,6 @@
 import { legacy_createStore as createStore } from 'redux';
-import thumbnailsReducer from './stored-thumbnail/reducer';
+import rootReducer from './rootReducer';
 
-const store = createStore(thumbnailsReducer);
+const store = createStore(rootReducer);
 
 export default store;

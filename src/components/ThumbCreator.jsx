@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-
-/** localStorage 이용을 위한 유틸리티 함수 */
-import storage from '../utils/storage/storage';
+// html2canvas
 import html2canvas from 'html2canvas';
-
+// redux
 import { connect } from 'react-redux';
 import { addThumbnail } from '../redux/stored-thumbnail/actions';
 
 function ThumbCreator(props) {
-  console.log(props);
   // thumbnail state
   const [width, setWidth] = useState(300);
   const [height, setHeight] = useState(200);
@@ -29,9 +26,9 @@ function ThumbCreator(props) {
   function setBackgroundImage(event) {
     /** 랜덤한 rgb 색상 생성하는 함수  */
     function makeRGB() {
-      const a = Math.floor(Math.random() * 90 + 1) + 150;
-      const b = Math.floor(Math.random() * 90 + 1) + 150;
-      const c = Math.floor(Math.random() * 90 + 1) + 150;
+      const a = Math.floor(Math.random() * (255 - 150 + 1)) + 150;
+      const b = Math.floor(Math.random() * (255 - 150 + 1)) + 150;
+      const c = Math.floor(Math.random() * (255 - 150 + 1)) + 150;
       const rgb = `rgb(${a},${b},${c})`;
       return rgb;
     }
@@ -71,26 +68,6 @@ function ThumbCreator(props) {
     else setIsBlack(true);
   }
 
-  function saveTemp() {
-    const storedThumbnails = storage.get('thumbnail') || [];
-    // 기존에 임시 저장된 썸네일이 있으면 마지막 번호 + 1, 아니면 0을 id로 설정
-    const newId = storedThumbnails.length ? storedThumbnails[0].id + 1 : 0;
-    let thumbnailInfo = {
-      id: newId,
-      width: width,
-      height: height,
-      background: background,
-      title: title,
-      subtitle: subtitle,
-      titleSize: titleSize,
-      subtitleSize: subtitleSize,
-      isBold: isBold,
-      isShadow: isShadow,
-      isBlack: isBlack,
-    };
-    // 가장 최근에 저장한 파일이 위로 오도록 thumbnailInfo를 앞에 삽입한다.
-    storage.set('thumbnail', [thumbnailInfo, ...storedThumbnails]);
-  }
   /** 현재 제작 중인 썸네일을 local storage에 임시저장하는 함수, redux에서 전역 상태관리하는 storedThumbnails에 새로운 썸네일 정보를 추가 후 local storage도 업데이트 한다. */
   function addThumbHandler() {
     const newId = props.storedThumbnails.length
@@ -112,6 +89,7 @@ function ThumbCreator(props) {
     props.addThumbnail(thumbnailInfo);
   }
 
+  /** 현재 생성하고 있는 썸네일을 다운로드 하는 함수 */
   function downloadThumbnail() {
     const target = document.getElementById('thumbnail');
     if (!target) return;
@@ -224,7 +202,7 @@ function ThumbCreator(props) {
 
 const mapStateToProps = (state) => {
   return {
-    storedThumbnails: state,
+    storedThumbnails: state.storedThumbnails,
   };
 };
 
