@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react';
 import storage from '../utils/storage/storage';
 import styled from 'styled-components';
 
-function ThumbStorage() {
+import { connect } from 'react-redux';
+import {
+  removeOneThumbnail,
+  removeAllThumbnails,
+} from '../redux/stored-thumbnail/actions';
+
+function ThumbStorage(props) {
   /** localStorage로부터 받아온 썸네일들로 storedThumbnails를 초기화 */
   const [storedThumbnails, setStoredThumbnails] = useState(
     storage.get('thumbnail') || []
@@ -42,7 +48,7 @@ function ThumbStorage() {
         </ScaledCanvas>
         <div className="preview-button">
           <button>수정</button>
-          <button onClick={() => deleteThumbnail(obj.id)}>삭제</button>
+          <button onClick={() => props.removeOneThumbnail(obj.id)}>삭제</button>
         </div>
       </div>
     );
@@ -65,12 +71,26 @@ function ThumbStorage() {
   return (
     <div className="thumb-storage">
       <header>미리보기</header>
+      <button onClick={props.removeAllThumbnails}>전체삭제</button>
       <div className="thumbs-preview">{thumbnailsPreivew}</div>
     </div>
   );
 }
 
-export default ThumbStorage;
+const mapStateToProps = (state) => {
+  return {
+    storedThumbnails: state,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    removeOneThumbnail: (targetId) => dispatch(removeOneThumbnail(targetId)),
+    removeAllThumbnails: () => dispatch(removeAllThumbnails()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ThumbStorage);
 
 const ScaledCanvas = styled.div`
   width: ${(props) => props.$width}px;

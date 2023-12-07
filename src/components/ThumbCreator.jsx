@@ -5,7 +5,11 @@ import styled from 'styled-components';
 import storage from '../utils/storage/storage';
 import html2canvas from 'html2canvas';
 
-function ThumbCreator() {
+import { connect } from 'react-redux';
+import { addThumbnail } from '../redux/stored-thumbnail/actions';
+
+function ThumbCreator(props) {
+  console.log(props);
   // thumbnail state
   const [width, setWidth] = useState(300);
   const [height, setHeight] = useState(200);
@@ -67,7 +71,6 @@ function ThumbCreator() {
     else setIsBlack(true);
   }
 
-  /** 현재 제작 중인 썸네일을 local storage에 임시저장하는 함수 */
   function saveTemp() {
     const storedThumbnails = storage.get('thumbnail') || [];
     // 기존에 임시 저장된 썸네일이 있으면 마지막 번호 + 1, 아니면 0을 id로 설정
@@ -87,6 +90,26 @@ function ThumbCreator() {
     };
     // 가장 최근에 저장한 파일이 위로 오도록 thumbnailInfo를 앞에 삽입한다.
     storage.set('thumbnail', [thumbnailInfo, ...storedThumbnails]);
+  }
+  /** 현재 제작 중인 썸네일을 local storage에 임시저장하는 함수, redux에서 전역 상태관리하는 storedThumbnails에 새로운 썸네일 정보를 추가 후 local storage도 업데이트 한다. */
+  function addThumbHandler() {
+    const newId = props.storedThumbnails.length
+      ? props.storedThumbnails[0].id + 1
+      : 0;
+    let thumbnailInfo = {
+      id: newId,
+      width: width,
+      height: height,
+      background: background,
+      title: title,
+      subtitle: subtitle,
+      titleSize: titleSize,
+      subtitleSize: subtitleSize,
+      isBold: isBold,
+      isShadow: isShadow,
+      isBlack: isBlack,
+    };
+    props.addThumbnail(thumbnailInfo);
   }
 
   function downloadThumbnail() {
@@ -191,7 +214,7 @@ function ThumbCreator() {
         </Option>
       </div>
       <SaveOptions>
-        <button onClick={saveTemp}>임시저장</button>
+        <button onClick={(e) => addThumbHandler(e)}>임시저장</button>
         <button onClick={downloadThumbnail}>다운로드</button>
         <button>클립보드 복사</button>
       </SaveOptions>
@@ -199,7 +222,19 @@ function ThumbCreator() {
   );
 }
 
-export default ThumbCreator;
+const mapStateToProps = (state) => {
+  return {
+    storedThumbnails: state,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addThumbnail: (newThumbInfo) => dispatch(addThumbnail(newThumbInfo)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ThumbCreator);
 
 const Canvas = styled.div`
   width: ${(props) => props.$width}px;
