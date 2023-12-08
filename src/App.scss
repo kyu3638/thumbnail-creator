@@ -1,6 +1,6 @@
 @import url('./reset.css');
 
-$background-color: rgba(255, 255, 255, 0.8);
+$background-color: rgba(255, 255, 255, 0.9);
 
 .App {
   display: flex;
@@ -25,11 +25,12 @@ $background-color: rgba(255, 255, 255, 0.8);
   .thumb {
     display: flex;
     flex-direction: column;
-    .line {
-      width: 60%;
-      border: 1px solid white;
-    }
   }
+}
+
+.line {
+  width: 60%;
+  border: 1px solid white;
 }
 
 .options {
@@ -49,8 +50,10 @@ $background-color: rgba(255, 255, 255, 0.8);
 }
 
 .thumbs-preview {
+  height: 90vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  overflow: scroll;
 }
