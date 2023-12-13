@@ -182,62 +182,71 @@ function ThumbCreator(props) {
       </div>
       <div className="options">
         <Option $num={3}>
-          <h2>사이즈</h2>
-          <button size-info={1} onClick={changeCanvas}>
+          <OptionName>사이즈</OptionName>
+          <Button size-info={1} onClick={changeCanvas}>
             1:1
-          </button>
-          <button size-info={2} onClick={changeCanvas}>
+          </Button>
+          <Button size-info={2} onClick={changeCanvas}>
             16:9
-          </button>
-          <button size-info={3} onClick={changeCanvas}>
+          </Button>
+          <Button size-info={3} onClick={changeCanvas}>
             4:3
-          </button>
+          </Button>
         </Option>
         <Option $num={3}>
-          <h2>배경</h2>
-          <button onClick={setBackgroundImage}>단색</button>
-          <button onClick={setBackgroundImage}>그라디언트</button>
-          <button onClick={setBackgroundImage}>이미지링크</button>
+          <OptionName>배경</OptionName>
+          <Button onClick={setBackgroundImage}>단색</Button>
+          <Button onClick={setBackgroundImage}>그라디언트</Button>
+          <Button onClick={setBackgroundImage}>이미지링크</Button>
         </Option>
         <Option $num={2}>
-          <h2>텍스트</h2>
-          <input
+          <OptionName>텍스트</OptionName>
+          <TitleInput
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-          <input
+          <TitleInput
             type="text"
             value={subtitle}
             onChange={(e) => setSubtitle(e.target.value)}
           />
         </Option>
         <Option $num={4}>
-          <h2>텍스트 크기</h2>
-          <button onClick={() => setTitleSize((pre) => pre + 2)}>
+          <OptionName>텍스트 크기</OptionName>
+          <Button onClick={() => setTitleSize((pre) => pre + 2)}>
             제목 크게
-          </button>
-          <button onClick={() => setTitleSize((pre) => pre - 2)}>
+          </Button>
+          <Button onClick={() => setTitleSize((pre) => pre - 2)}>
             제목 작게
-          </button>
-          <button onClick={() => setSubtitleSize((pre) => pre + 2)}>
+          </Button>
+          <Button onClick={() => setSubtitleSize((pre) => pre + 2)}>
             소제목 크게
-          </button>
-          <button onClick={() => setSubtitleSize((pre) => pre - 2)}>
+          </Button>
+          <Button onClick={() => setSubtitleSize((pre) => pre - 2)}>
             소제목 작게
-          </button>
+          </Button>
         </Option>
         <Option $num={3}>
-          <h2>텍스트 스타일</h2>
-          <button onClick={textBoldHandler}>텍스트 굵게</button>
-          <button onClick={textShadowHandler}>텍스트 그림자</button>
-          <button onClick={textColorHandler}>텍스트 반전</button>
+          <OptionName>텍스트 스타일</OptionName>
+          {/* <button onClick={textBoldHandler}>텍스트 굵게</button>
+          <button onClick={textShadowHandler}>텍스트 그림자</button> */}
+          {/* <button onClick={textColorHandler}>텍스트 반전</button> */}
+          <CheckButton onClick={textBoldHandler} $checked={isBold}>
+            텍스트 굵게
+          </CheckButton>
+          <CheckButton onClick={textShadowHandler} $checked={isShadow}>
+            텍스트 그림자
+          </CheckButton>
+          <CheckButton onClick={textColorHandler} $checked={isBlack}>
+            텍스트반전
+          </CheckButton>
         </Option>
       </div>
       <SaveOptions>
-        <button onClick={(e) => addThumbHandler(e)}>임시저장</button>
-        <button onClick={downloadThumbnail}>다운로드</button>
-        <button>클립보드 복사</button>
+        <SaveButton onClick={(e) => addThumbHandler(e)}>임시저장</SaveButton>
+        <SaveButton onClick={downloadThumbnail}>다운로드</SaveButton>
+        <SaveButton>클립보드 복사</SaveButton>
       </SaveOptions>
     </div>
   );
@@ -278,6 +287,14 @@ const Option = styled.div`
   display: grid;
   grid-template-rows: 1;
   grid-template-columns: 25% repeat(${(props) => +props.$num}, 1fr);
+  Button {
+    &:nth-child(2) {
+      justify-self: start;
+    }
+    &:last-child {
+      justify-self: end;
+    }
+  }
 `;
 
 const ThumbTitle = styled.h2`
@@ -303,4 +320,52 @@ const SaveOptions = styled.div`
   justify-content: center;
   align-items: center;
   gap: 5%;
+  padding: 0 30px;
+`;
+
+const SaveButton = styled.button`
+  width: 130px;
+  height: 30px;
+  border: none;
+  font-size: 17px;
+  font-weight: bold;
+  background-color: #7396b5;
+  border-radius: 7px;
+`;
+
+const OptionName = styled.h2`
+  // justify-self: center;
+  padding-left: 20px;
+  align-self: center;
+  font-weight: bold;
+  font-size: 16px;
+`;
+
+const Button = styled.button`
+  justify-self: center;
+  align-self: center;
+  width: 80%;
+  heigth: 100%;
+  border: none;
+  border-radius: 15px;
+  padding: 7px;
+  font-weight: bold;
+  font-size: 16px;
+  background-color: #d0dce6;
+`;
+
+const CheckButton = styled(Button)`
+  color: ${(props) => (props.$checked ? 'white' : 'black')};
+  background-color: ${(props) => (props.$checked ? '#2c6290' : '#d0dce6')};
+`;
+
+const TitleInput = styled.input`
+  width: 90%;
+  height: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 4px;
+  padding-left: 10px;
+  font-size: 16px;
+  color: #666666;
 `;
