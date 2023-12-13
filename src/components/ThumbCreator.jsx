@@ -11,8 +11,8 @@ import * as B from '../styles/Button.styled';
 
 function ThumbCreator(props) {
   // thumbnail state
-  const [width, setWidth] = useState(300);
-  const [height, setHeight] = useState(200);
+  const [width, setWidth] = useState(1280);
+  const [height, setHeight] = useState(720);
   const [background, setBackground] = useState(
     `url(https://images.unsplash.com/photo-1685895324391-ba9e104fd2d0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)`
   );
@@ -40,6 +40,9 @@ function ThumbCreator(props) {
         setWidth(720);
         setHeight(540);
         break;
+      default:
+        setWidth(1280);
+        setHeight(720);
     }
   }
 
@@ -94,6 +97,11 @@ function ThumbCreator(props) {
         const imageLink = prompt('이미지 링크를 입력해주세요');
         setBackground(`url(${imageLink})`);
         props.changeBackground(`url(${imageLink})`);
+        break;
+      default:
+        background = makeRGB();
+        setBackground(background);
+        props.changeBackground(background);
         break;
     }
   }
@@ -150,6 +158,21 @@ function ThumbCreator(props) {
       link.download = 'thumbnail.png';
       link.click();
       document.body.removeChild(link);
+    });
+  }
+
+  /** 현재 생성하고 있는 썸네일을 클립보드로 복사하는 함수 */
+  function clipboardThumbnail() {
+    const target = document.getElementById('thumbnail');
+    if (!target) return;
+    html2canvas(target, {
+      letterRendering: 1,
+      allowTaint: true, // cross-origin 이미지를 캔버스에 삽입할지
+      useCORS: true, // Whether to attempt to load images from a server using CORS
+    }).then((canvas) => {
+      canvas.toBlob((blob) =>
+        navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+      );
     });
   }
 
@@ -247,7 +270,7 @@ function ThumbCreator(props) {
           임시저장
         </B.SaveButton>
         <B.SaveButton onClick={downloadThumbnail}>다운로드</B.SaveButton>
-        <B.SaveButton>클립보드 복사</B.SaveButton>
+        <B.SaveButton onClick={clipboardThumbnail}>클립보드 복사</B.SaveButton>
       </SaveOptions>
     </div>
   );
