@@ -7,6 +7,8 @@ import {
   removeAllThumbnails,
 } from '../redux/stored-thumbnail/actions';
 
+import * as B from '../styles/Button.styled';
+
 function ThumbStorage(props) {
   /** storedThumbnails를 화면에 구현할 html 코드로 return해줌 */
   const thumbnailsPreivew = props.storedThumbnails.map((obj, index) => {
@@ -42,8 +44,10 @@ function ThumbStorage(props) {
           </ScaledThumbSubtitle>
         </ScaledCanvas>
         <div className="preview-button">
-          <button onClick={() => props.removeOneThumbnail(obj.id)}>삭제</button>
-          <button>다운로드</button>
+          <B.Button onClick={() => props.removeOneThumbnail(obj.id)}>
+            삭제
+          </B.Button>
+          <B.Button>다운로드</B.Button>
         </div>
       </div>
     );
@@ -51,8 +55,8 @@ function ThumbStorage(props) {
 
   return (
     <div className="thumb-storage">
-      <header>미리보기</header>
-      <button onClick={props.removeAllThumbnails}>전체삭제</button>
+      <header>미리보기 🎨</header>
+      <B.SaveButton onClick={props.removeAllThumbnails}>전체삭제</B.SaveButton>
       <div className="thumbs-preview">{thumbnailsPreivew}</div>
     </div>
   );

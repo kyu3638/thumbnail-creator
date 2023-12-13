@@ -6,6 +6,8 @@ import html2canvas from 'html2canvas';
 import { connect } from 'react-redux';
 import { addThumbnail } from '../redux/stored-thumbnail/actions';
 import { changeBackground } from '../redux/app-background/actions';
+// Button Component
+import * as B from '../styles/Button.styled';
 
 function ThumbCreator(props) {
   // thumbnail state
@@ -183,21 +185,21 @@ function ThumbCreator(props) {
       <div className="options">
         <Option $num={3}>
           <OptionName>사이즈</OptionName>
-          <Button size-info={1} onClick={changeCanvas}>
+          <B.Button size-info={1} onClick={changeCanvas}>
             1:1
-          </Button>
-          <Button size-info={2} onClick={changeCanvas}>
+          </B.Button>
+          <B.Button size-info={2} onClick={changeCanvas}>
             16:9
-          </Button>
-          <Button size-info={3} onClick={changeCanvas}>
+          </B.Button>
+          <B.Button size-info={3} onClick={changeCanvas}>
             4:3
-          </Button>
+          </B.Button>
         </Option>
         <Option $num={3}>
           <OptionName>배경</OptionName>
-          <Button onClick={setBackgroundImage}>단색</Button>
-          <Button onClick={setBackgroundImage}>그라디언트</Button>
-          <Button onClick={setBackgroundImage}>이미지링크</Button>
+          <B.Button onClick={setBackgroundImage}>단색</B.Button>
+          <B.Button onClick={setBackgroundImage}>그라디언트</B.Button>
+          <B.Button onClick={setBackgroundImage}>이미지링크</B.Button>
         </Option>
         <Option $num={2}>
           <OptionName>텍스트</OptionName>
@@ -214,39 +216,38 @@ function ThumbCreator(props) {
         </Option>
         <Option $num={4}>
           <OptionName>텍스트 크기</OptionName>
-          <Button onClick={() => setTitleSize((pre) => pre + 2)}>
+          <B.Button onClick={() => setTitleSize((pre) => pre + 2)}>
             제목 크게
-          </Button>
-          <Button onClick={() => setTitleSize((pre) => pre - 2)}>
+          </B.Button>
+          <B.Button onClick={() => setTitleSize((pre) => pre - 2)}>
             제목 작게
-          </Button>
-          <Button onClick={() => setSubtitleSize((pre) => pre + 2)}>
+          </B.Button>
+          <B.Button onClick={() => setSubtitleSize((pre) => pre + 2)}>
             소제목 크게
-          </Button>
-          <Button onClick={() => setSubtitleSize((pre) => pre - 2)}>
+          </B.Button>
+          <B.Button onClick={() => setSubtitleSize((pre) => pre - 2)}>
             소제목 작게
-          </Button>
+          </B.Button>
         </Option>
         <Option $num={3}>
           <OptionName>텍스트 스타일</OptionName>
-          {/* <button onClick={textBoldHandler}>텍스트 굵게</button>
-          <button onClick={textShadowHandler}>텍스트 그림자</button> */}
-          {/* <button onClick={textColorHandler}>텍스트 반전</button> */}
-          <CheckButton onClick={textBoldHandler} $checked={isBold}>
+          <B.CheckButton onClick={textBoldHandler} $checked={isBold}>
             텍스트 굵게
-          </CheckButton>
-          <CheckButton onClick={textShadowHandler} $checked={isShadow}>
+          </B.CheckButton>
+          <B.CheckButton onClick={textShadowHandler} $checked={isShadow}>
             텍스트 그림자
-          </CheckButton>
-          <CheckButton onClick={textColorHandler} $checked={isBlack}>
+          </B.CheckButton>
+          <B.CheckButton onClick={textColorHandler} $checked={isBlack}>
             텍스트반전
-          </CheckButton>
+          </B.CheckButton>
         </Option>
       </div>
       <SaveOptions>
-        <SaveButton onClick={(e) => addThumbHandler(e)}>임시저장</SaveButton>
-        <SaveButton onClick={downloadThumbnail}>다운로드</SaveButton>
-        <SaveButton>클립보드 복사</SaveButton>
+        <B.SaveButton onClick={(e) => addThumbHandler(e)}>
+          임시저장
+        </B.SaveButton>
+        <B.SaveButton onClick={downloadThumbnail}>다운로드</B.SaveButton>
+        <B.SaveButton>클립보드 복사</B.SaveButton>
       </SaveOptions>
     </div>
   );
@@ -323,40 +324,12 @@ const SaveOptions = styled.div`
   padding: 0 30px;
 `;
 
-const SaveButton = styled.button`
-  width: 130px;
-  height: 30px;
-  border: none;
-  font-size: 17px;
-  font-weight: bold;
-  background-color: #7396b5;
-  border-radius: 7px;
-`;
-
 const OptionName = styled.h2`
   // justify-self: center;
   padding-left: 20px;
   align-self: center;
   font-weight: bold;
   font-size: 16px;
-`;
-
-const Button = styled.button`
-  justify-self: center;
-  align-self: center;
-  width: 80%;
-  heigth: 100%;
-  border: none;
-  border-radius: 15px;
-  padding: 7px;
-  font-weight: bold;
-  font-size: 16px;
-  background-color: #d0dce6;
-`;
-
-const CheckButton = styled(Button)`
-  color: ${(props) => (props.$checked ? 'white' : 'black')};
-  background-color: ${(props) => (props.$checked ? '#2c6290' : '#d0dce6')};
 `;
 
 const TitleInput = styled.input`
