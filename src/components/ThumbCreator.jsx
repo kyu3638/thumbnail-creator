@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 // html2canvas
 import html2canvas from 'html2canvas';
@@ -22,6 +22,43 @@ function ThumbCreator(props) {
   const [isBold, setIsBold] = useState(false);
   const [isShadow, setIsShadow] = useState(false);
   const [isBlack, setIsBlack] = useState(false);
+
+  function changeCanvas(event) {
+    const size = Number(event.target.getAttribute('size-info'));
+    switch (size) {
+      case 1:
+        setWidth(600);
+        setHeight(600);
+        break;
+      case 2:
+        setWidth(1280);
+        setHeight(720);
+        break;
+      case 3:
+        setWidth(720);
+        setHeight(540);
+        break;
+    }
+  }
+
+  useEffect(() => {
+    const preview = document.getElementById('preview');
+    const x = preview.clientWidth;
+    const y = preview.clientHeight;
+    let flag = false;
+    let tempWidth = width;
+    let tempHeight = height;
+    while (!flag) {
+      if (tempWidth >= x || tempHeight >= y) {
+        tempWidth *= 0.8;
+        tempHeight *= 0.8;
+      } else {
+        flag = true;
+      }
+    }
+    setWidth(tempWidth);
+    setHeight(tempHeight);
+  }, [width, height]);
 
   /** 사용자가 선택한 옵션에 따라 배경을 그리는 함수 */
   function setBackgroundImage(event) {
@@ -116,7 +153,7 @@ function ThumbCreator(props) {
 
   return (
     <div className="thumb-creator">
-      <div className="preview">
+      <div id="preview" className="preview">
         <Canvas
           id="thumbnail"
           className="thumb"
@@ -144,18 +181,17 @@ function ThumbCreator(props) {
         </Canvas>
       </div>
       <div className="options">
-        <Option $num={2}>
+        <Option $num={3}>
           <h2>사이즈</h2>
-          <input
-            type="number"
-            value={width}
-            onChange={(e) => setWidth(e.target.value)}
-          />
-          <input
-            type="number"
-            value={height}
-            onChange={(e) => setHeight(e.target.value)}
-          />
+          <button size-info={1} onClick={changeCanvas}>
+            1:1
+          </button>
+          <button size-info={2} onClick={changeCanvas}>
+            16:9
+          </button>
+          <button size-info={3} onClick={changeCanvas}>
+            4:3
+          </button>
         </Option>
         <Option $num={3}>
           <h2>배경</h2>
@@ -178,16 +214,16 @@ function ThumbCreator(props) {
         </Option>
         <Option $num={4}>
           <h2>텍스트 크기</h2>
-          <button onClick={() => setTitleSize((pre) => pre + 1)}>
+          <button onClick={() => setTitleSize((pre) => pre + 2)}>
             제목 크게
           </button>
-          <button onClick={() => setTitleSize((pre) => pre - 1)}>
+          <button onClick={() => setTitleSize((pre) => pre - 2)}>
             제목 작게
           </button>
-          <button onClick={() => setSubtitleSize((pre) => pre + 1)}>
+          <button onClick={() => setSubtitleSize((pre) => pre + 2)}>
             소제목 크게
           </button>
-          <button onClick={() => setSubtitleSize((pre) => pre - 1)}>
+          <button onClick={() => setSubtitleSize((pre) => pre - 2)}>
             소제목 작게
           </button>
         </Option>
@@ -229,9 +265,11 @@ const Canvas = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 5px;
   background: ${(props) => props.$background};
   background-position: center;
   background-size: cover;
+  scale: ${(props) => props.$scale};
 `;
 
 const Option = styled.div`

@@ -21,7 +21,6 @@ function AppContainer(props) {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
     background: state.background,
   };
