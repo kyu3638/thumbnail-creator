@@ -13,7 +13,7 @@ import {
 import * as B from '../styles/Button.styled';
 
 function ThumbStorage(props) {
-  /** 현재 생성하고 있는 썸네일을 다운로드 하는 함수 */
+  /** 임시저장된 썸네일을 다운로드 하는 함수 */
   function downloadThumbnail(targetId) {
     const target = document.getElementById(`capture${targetId}`);
     if (!target) return;
@@ -31,7 +31,7 @@ function ThumbStorage(props) {
     });
   }
 
-  /** 현재 생성하고 있는 썸네일을 클립보드로 복사하는 함수 */
+  /** 임시저장된 썸네일을 클립보드로 복사하는 함수 */
   function clipboardThumbnail(targetId) {
     const target = document.getElementById(`capture${targetId}`);
     if (!target) return;
@@ -90,6 +90,7 @@ function ThumbStorage(props) {
             클립보드
           </B.Button>
         </div>
+        <hr></hr>
       </div>
     );
   });

@@ -13,6 +13,8 @@ function ThumbCreator(props) {
   // thumbnail state
   const [width, setWidth] = useState(1280);
   const [height, setHeight] = useState(720);
+  const [viewWidth, setViewWidth] = useState(1280);
+  const [viewHeight, setViewHeigth] = useState(720);
   const [background, setBackground] = useState(
     `url(https://images.unsplash.com/photo-1685895324391-ba9e104fd2d0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)`
   );
@@ -29,20 +31,20 @@ function ThumbCreator(props) {
     const size = Number(event.target.getAttribute('size-info'));
     switch (size) {
       case 1:
-        setWidth(600);
-        setHeight(600);
+        setViewWidth(600);
+        setViewHeigth(600);
         break;
       case 2:
-        setWidth(1280);
-        setHeight(720);
+        setViewWidth(1280);
+        setViewHeigth(720);
         break;
       case 3:
-        setWidth(720);
-        setHeight(540);
+        setViewWidth(720);
+        setViewHeigth(540);
         break;
       default:
-        setWidth(1280);
-        setHeight(720);
+        setViewWidth(1280);
+        setViewHeigth(720);
     }
   }
 
@@ -51,8 +53,8 @@ function ThumbCreator(props) {
     const x = preview.clientWidth;
     const y = preview.clientHeight;
     let flag = false;
-    let tempWidth = width;
-    let tempHeight = height;
+    let tempWidth = viewWidth;
+    let tempHeight = viewHeight;
     while (!flag) {
       if (tempWidth >= x || tempHeight >= y) {
         tempWidth *= 0.8;
@@ -63,7 +65,7 @@ function ThumbCreator(props) {
     }
     setWidth(tempWidth);
     setHeight(tempHeight);
-  }, [width, height]);
+  }, [viewWidth, viewHeight]);
 
   /** 사용자가 선택한 옵션에 따라 배경을 그리는 함수 */
   function setBackgroundImage(event) {
