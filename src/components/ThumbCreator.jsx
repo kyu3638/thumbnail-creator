@@ -6,11 +6,13 @@ import html2canvas from 'html2canvas';
 import { connect } from 'react-redux';
 import { addThumbnail } from '../redux/stored-thumbnail/actions';
 import { changeBackground } from '../redux/app-background/actions';
+// Button Component
+import * as B from '../styles/Button.styled';
 
 function ThumbCreator(props) {
   // thumbnail state
-  const [width, setWidth] = useState(300);
-  const [height, setHeight] = useState(200);
+  const [width, setWidth] = useState(1280);
+  const [height, setHeight] = useState(720);
   const [background, setBackground] = useState(
     `url(https://images.unsplash.com/photo-1685895324391-ba9e104fd2d0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)`
   );
@@ -38,6 +40,9 @@ function ThumbCreator(props) {
         setWidth(720);
         setHeight(540);
         break;
+      default:
+        setWidth(1280);
+        setHeight(720);
     }
   }
 
@@ -92,6 +97,11 @@ function ThumbCreator(props) {
         const imageLink = prompt('이미지 링크를 입력해주세요');
         setBackground(`url(${imageLink})`);
         props.changeBackground(`url(${imageLink})`);
+        break;
+      default:
+        background = makeRGB();
+        setBackground(background);
+        props.changeBackground(background);
         break;
     }
   }
@@ -151,6 +161,21 @@ function ThumbCreator(props) {
     });
   }
 
+  /** 현재 생성하고 있는 썸네일을 클립보드로 복사하는 함수 */
+  function clipboardThumbnail() {
+    const target = document.getElementById('thumbnail');
+    if (!target) return;
+    html2canvas(target, {
+      letterRendering: 1,
+      allowTaint: true, // cross-origin 이미지를 캔버스에 삽입할지
+      useCORS: true, // Whether to attempt to load images from a server using CORS
+    }).then((canvas) => {
+      canvas.toBlob((blob) =>
+        navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+      );
+    });
+  }
+
   return (
     <div className="thumb-creator">
       <div id="preview" className="preview">
@@ -182,62 +207,70 @@ function ThumbCreator(props) {
       </div>
       <div className="options">
         <Option $num={3}>
-          <h2>사이즈</h2>
-          <button size-info={1} onClick={changeCanvas}>
+          <OptionName>사이즈</OptionName>
+          <B.Button size-info={1} onClick={changeCanvas}>
             1:1
-          </button>
-          <button size-info={2} onClick={changeCanvas}>
+          </B.Button>
+          <B.Button size-info={2} onClick={changeCanvas}>
             16:9
-          </button>
-          <button size-info={3} onClick={changeCanvas}>
+          </B.Button>
+          <B.Button size-info={3} onClick={changeCanvas}>
             4:3
-          </button>
+          </B.Button>
         </Option>
         <Option $num={3}>
-          <h2>배경</h2>
-          <button onClick={setBackgroundImage}>단색</button>
-          <button onClick={setBackgroundImage}>그라디언트</button>
-          <button onClick={setBackgroundImage}>이미지링크</button>
+          <OptionName>배경</OptionName>
+          <B.Button onClick={setBackgroundImage}>단색</B.Button>
+          <B.Button onClick={setBackgroundImage}>그라디언트</B.Button>
+          <B.Button onClick={setBackgroundImage}>이미지링크</B.Button>
         </Option>
         <Option $num={2}>
-          <h2>텍스트</h2>
-          <input
+          <OptionName>텍스트</OptionName>
+          <TitleInput
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-          <input
+          <TitleInput
             type="text"
             value={subtitle}
             onChange={(e) => setSubtitle(e.target.value)}
           />
         </Option>
         <Option $num={4}>
-          <h2>텍스트 크기</h2>
-          <button onClick={() => setTitleSize((pre) => pre + 2)}>
+          <OptionName>텍스트 크기</OptionName>
+          <B.Button onClick={() => setTitleSize((pre) => pre + 2)}>
             제목 크게
-          </button>
-          <button onClick={() => setTitleSize((pre) => pre - 2)}>
+          </B.Button>
+          <B.Button onClick={() => setTitleSize((pre) => pre - 2)}>
             제목 작게
-          </button>
-          <button onClick={() => setSubtitleSize((pre) => pre + 2)}>
+          </B.Button>
+          <B.Button onClick={() => setSubtitleSize((pre) => pre + 2)}>
             소제목 크게
-          </button>
-          <button onClick={() => setSubtitleSize((pre) => pre - 2)}>
+          </B.Button>
+          <B.Button onClick={() => setSubtitleSize((pre) => pre - 2)}>
             소제목 작게
-          </button>
+          </B.Button>
         </Option>
         <Option $num={3}>
-          <h2>텍스트 스타일</h2>
-          <button onClick={textBoldHandler}>텍스트 굵게</button>
-          <button onClick={textShadowHandler}>텍스트 그림자</button>
-          <button onClick={textColorHandler}>텍스트 반전</button>
+          <OptionName>텍스트 스타일</OptionName>
+          <B.CheckButton onClick={textBoldHandler} $checked={isBold}>
+            텍스트 굵게
+          </B.CheckButton>
+          <B.CheckButton onClick={textShadowHandler} $checked={isShadow}>
+            텍스트 그림자
+          </B.CheckButton>
+          <B.CheckButton onClick={textColorHandler} $checked={isBlack}>
+            텍스트반전
+          </B.CheckButton>
         </Option>
       </div>
       <SaveOptions>
-        <button onClick={(e) => addThumbHandler(e)}>임시저장</button>
-        <button onClick={downloadThumbnail}>다운로드</button>
-        <button>클립보드 복사</button>
+        <B.SaveButton onClick={(e) => addThumbHandler(e)}>
+          임시저장
+        </B.SaveButton>
+        <B.SaveButton onClick={downloadThumbnail}>다운로드</B.SaveButton>
+        <B.SaveButton onClick={clipboardThumbnail}>클립보드 복사</B.SaveButton>
       </SaveOptions>
     </div>
   );
@@ -278,6 +311,14 @@ const Option = styled.div`
   display: grid;
   grid-template-rows: 1;
   grid-template-columns: 25% repeat(${(props) => +props.$num}, 1fr);
+  Button {
+    &:nth-child(2) {
+      justify-self: start;
+    }
+    &:last-child {
+      justify-self: end;
+    }
+  }
 `;
 
 const ThumbTitle = styled.h2`
@@ -303,4 +344,24 @@ const SaveOptions = styled.div`
   justify-content: center;
   align-items: center;
   gap: 5%;
+  padding: 0 30px;
+`;
+
+const OptionName = styled.h2`
+  // justify-self: center;
+  padding-left: 20px;
+  align-self: center;
+  font-weight: bold;
+  font-size: 16px;
+`;
+
+const TitleInput = styled.input`
+  width: 90%;
+  height: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 4px;
+  padding-left: 10px;
+  font-size: 16px;
+  color: #666666;
 `;
